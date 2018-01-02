@@ -2,6 +2,7 @@ package controllers
 
 import io.javalin.Context
 import models.Activity
+import models.Location
 import models.User
 
 class PacemakerRestService  {
@@ -9,6 +10,17 @@ class PacemakerRestService  {
 
     fun listUsers(ctx: Context) {
         ctx.json(pacemaker.users)
+    }
+
+    //get a specify user
+    fun getUser(ctx: Context) {
+        val userId: String? = ctx.param("userId")
+        val user = pacemaker.getUser(userId!!)
+        if (user != null) {
+            ctx.json(user)
+        } else {
+            ctx.status(404)
+        }
     }
 
     fun createUser(ctx: Context) {
@@ -59,5 +71,27 @@ class PacemakerRestService  {
         val id: String? =  ctx.param("id")
         pacemaker.deleteActivities(id!!);
         ctx.status(204)
+    }
+
+    //delete a specify user
+    fun deleteUser(ctx: Context) {
+        val id: String? = ctx.param("id")
+        pacemaker.deleteUser(id!!)
+        ctx.status(204)
+    }
+
+    //add location
+    fun addLocation(ctx: Context) {
+        val id: String? = ctx.param("id")
+        val user = pacemaker.getUser(id!!)
+        val activity = pacemaker.getActivity(id!!)
+        if (user != null && activity != null) {
+            val location = ctx.bodyAsClass(Location::class.java)
+            val newlocation = pacemaker.addLocation(user.id, location.latitude, location.longitude)
+            ctx.json(newlocation!!)
+        } else {
+            ctx.status(404)
+        }
+
     }
 }

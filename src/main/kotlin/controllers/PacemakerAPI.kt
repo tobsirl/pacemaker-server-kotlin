@@ -1,6 +1,7 @@
 package controllers
 
 import models.Activity
+import models.Location
 import models.User
 
 class PacemakerAPI {
@@ -50,5 +51,25 @@ class PacemakerAPI {
             }
             user.activities.clear();
         }
+    }
+
+    fun deleteUser(id: String) {
+        require(userIndex[id] != null)
+        var user = userIndex.get(id)
+        if (user != null) {
+            userIndex.remove(id)
+        }
+    }
+
+    fun addLocation(id: String, latitude: Double, longitude: Double): Location? {
+        var location:Location? = null
+        var user = userIndex.get(id)
+        var activity = activitiesIndex.get(id)
+        if (user != null && activity != null) {
+            location = Location(latitude, longitude)
+            user.activities[activity.id] = activity
+            activitiesIndex[activity.id] = activity;
+        }
+        return location;
     }
 }
