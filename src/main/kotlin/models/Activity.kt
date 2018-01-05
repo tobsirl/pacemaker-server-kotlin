@@ -1,7 +1,6 @@
 package models
 
-import java.util.UUID
-import kotlin.collections.ArrayList
+import java.util.*
 
 data class Activity(
         var type: String = "",

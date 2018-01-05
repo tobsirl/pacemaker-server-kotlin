@@ -28,6 +28,15 @@ fun configRoutes(app: Javalin, service: PacemakerRestService) {
     app.post("/users/:id/activities") { ctx -> service.createActivity(ctx) }
     app.delete("/users/:id/activities") { ctx -> service.deleteActivites(ctx) }
     //add a location
-    app.post("/users/:id/activities/:activityId/locations") { ctx -> service.addLocation(ctx)}
+    app.post("/users/:id/activities/:activityId/locations") { ctx -> service.addLocation(ctx) }
+    //get locations
+    app.get("/users/:id/activities/:activityId/locations") { ctx -> service.getLocations(ctx) }
+    //Friend endpoints
+    app.post("/users/:id/friendlist/:email") { ctx -> service.addFriend(ctx) }
+    app.delete("/users/:id/friendlist/:email") { ctx -> service.unfollowFriend(ctx) }
+    app.get("/users/:id/friendlist/:email") { ctx -> service.getFriendsList(ctx) }
+    //message endpoints
+    app.get("/users/:id/friendlist/:email/message") { ctx -> service.getMessages(ctx) }
+    app.get("/users/:id/friendlist/:email/message") { ctx -> service.messageFriend(ctx) }
 }
 

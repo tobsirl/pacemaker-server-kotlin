@@ -3,6 +3,7 @@ package controllers
 import io.javalin.Context
 import models.Activity
 import models.Location
+import models.Message
 import models.User
 
 class PacemakerRestService  {
@@ -84,14 +85,79 @@ class PacemakerRestService  {
     fun addLocation(ctx: Context) {
         val id: String? = ctx.param("id")
         val user = pacemaker.getUser(id!!)
-        val activity = pacemaker.getActivity(id!!)
+        val activity = pacemaker.getActivity(id)
         if (user != null && activity != null) {
             val location = ctx.bodyAsClass(Location::class.java)
-            val newlocation = pacemaker.addLocation(user.id, location.latitude, location.longitude)
-            ctx.json(newlocation!!)
+            activity.route.add(location)
+            ctx.json(activity)
         } else {
             ctx.status(404)
         }
 
+    }
+    //getlocations
+
+    fun getLocations(ctx: Context) {
+        val id: String? = ctx.param("id")
+        val activity = pacemaker.getActivity(id!!)
+        if (activity != null) {
+            ctx.json(activity.route)
+        } else {
+            ctx.status(404)
+        }
+    }
+
+    //Friend commands
+    fun addFriend(ctx: Context) {
+        val email: String? = ctx.param("email")
+        if (email != null) {
+            pacemaker.addFriend(email!!)
+            ctx.json(email)
+        } else {
+            ctx.status(404)
+        }
+    }
+
+    fun unfollowFriend(ctx: Context) {
+        val email: String? = ctx.param("email")
+        if (email != null) {
+            pacemaker.unfollowFriend(email!!)
+            ctx.json(email)
+        } else {
+            ctx.status(404)
+        }
+    }
+
+    fun getFriendsList(ctx: Context) {
+        val email: String? = ctx.param("email")
+        if (email != null) {
+            val friendsList = pacemaker.getFriendsList(email)
+            ctx.json(friendsList)
+        } else {
+            ctx.status(404)
+        }
+    }
+
+    //messages
+    fun getMessages(ctx: Context) {
+        val email: String? = ctx.param("email")
+        if (email != null) {
+            val messages = pacemaker.getMessages(email)
+            ctx.json(messages!!)
+        } else {
+            ctx.status(404)
+        }
+
+    }
+
+    fun messageFriend(ctx: Context) {
+        val email: String? = ctx.param("email")
+        if (email != null) {
+            val message = ctx.bodyAsClass(Message::class.java)
+            val messageForFriend = pacemaker.messageFriend(email, message)
+            ctx.json(messageForFriend!!)
+        } else {
+            ctx.status(404)
+        }
     }
 }
