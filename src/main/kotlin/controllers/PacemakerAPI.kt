@@ -4,7 +4,6 @@ import models.Activity
 import models.Location
 import models.Message
 import models.User
-import java.util.*
 
 class PacemakerAPI {
 
@@ -25,7 +24,7 @@ class PacemakerAPI {
     }
 
     fun deleteUsers() {
-        userIndex.clear();
+        userIndex.clear()
         emailIndex.clear()
     }
 
@@ -41,7 +40,7 @@ class PacemakerAPI {
             user.activities[activity.id] = activity
             activitiesIndex[activity.id] = activity;
         }
-        return activity;
+        return activity
     }
 
     fun getActivity(id: String): Activity? {
@@ -55,7 +54,7 @@ class PacemakerAPI {
             for ((u, activity) in user.activities) {
                 activitiesIndex.remove(activity.id)
             }
-            user.activities.clear();
+            user.activities.clear()
         }
     }
 
@@ -74,7 +73,7 @@ class PacemakerAPI {
         if (user != null && activity != null) {
             location = Location(latitude, longitude)
             user.activities[activity.id] = activity
-            activitiesIndex[activity.id] = activity;
+            activitiesIndex[activity.id] = activity
         }
         return location;
     }
@@ -122,9 +121,19 @@ class PacemakerAPI {
         return listOfMessages
     }
 
-    fun messageFriend(email: String, message: Message): Message? {
-
+    fun messageFriend(email: String, message: Message): MutableCollection<Message> {
+        var friend = friendList.get(email)
+        var user = userIndex[email]
+        var listOfMessages = messages
+        if (user != null && friend != null) {
+            listOfMessages.addAll(messages)
+        }
+        return listOfMessages
     }
 }
+
+
+
+
 
 
